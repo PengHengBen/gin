@@ -2,62 +2,44 @@ package main
 
 import (
 	"fmt"
+	"gin/routers"
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"time"
 )
 
-// timestamp convert to date
-func UnixToTime(timestamp int) string {
-	fmt.Println(timestamp)
-	t := time.Unix(int64(timestamp), 0)
-	return t.Format("2006-01-02 15:04:05")
+// 路由中间件
+func initMiddleware(c *gin.Context) {
+	start := time.Now().UnixNano()
+	fmt.Println("1-middleware function")
+	// 调用请求剩余处理程序
+	c.Next()
+	// 中止调用请求处理程序
+	//c.Abort()
+	fmt.Println("2-middleware function")
+	end := time.Now().UnixNano()
+	fmt.Println(end - start)
 }
 
 func main() {
+	// 创建默认路由引擎
 	r := gin.Default()
+	// 自定义模板函数 注意要把这个函数放在加载模板前
+	//r.SetFuncMap(template.FuncMap{
+	//	"UnixToTime": models.UnixToTime(time.Now().Unix()),
+	//})
 	// 配置模板文件路径
-	r.LoadHTMLGlob("templates/*")
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
-	r.GET("/goods", func(c *gin.Context) {
-		// notice: this needs LoadHTMLGlob()
-		c.HTML(http.StatusOK, "goods.html", gin.H{
-			"title": "this is goods backend data",
-		})
-	})
-	r.GET("/json", func(c *gin.Context) {
-		c.JSON(http.StatusOK, map[string]interface{}{ // == gin.H
-			"success": true,
-			"msg":     "hello gin",
-		})
-	})
-	r.POST("/add", func(c *gin.Context) {
-		c.String(http.StatusOK, "post data")
-	})
-	r.PUT("/update", func(c *gin.Context) {
-		c.String(http.StatusOK, "update data")
-	})
-	r.DELETE("/delete", func(c *gin.Context) {
-		c.String(http.StatusOK, "delete data")
-	})
-
-	r.GET("/user", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "user.html", gin.H{})
-	})
-	r.POST("/doAddUser", func(c *gin.Context) {
-		username := c.PostForm("username")
-		password := c.PostForm("password")
-		age := c.DefaultPostForm("age", "20")
-
-		c.JSON(http.StatusOK, gin.H{
-			"username": username,
-			"password": password,
-			"age":      age,
-		})
-	})
+	r.LoadHTMLGlob("templates/**/*")
+	// 全局中间件
+	//r.Use(initMiddleware)
+	// 加载路由
+	routers.AdminRoutersInit(r)
+	routers.ApiRoutersInit(r)
+	routers.DefaultRoutersInit(r)
+	// 配置路由中间件
+	//r.GET("/middleware", func(c *gin.Context) {
+	//	fmt.Println("this is middleware home page")
+	//	//time.Sleep(time.Second)
+	//	c.String(http.StatusOK, "middleware home page")
+	//})
 	r.Run()
 }
