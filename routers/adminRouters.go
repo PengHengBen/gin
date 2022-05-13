@@ -6,22 +6,23 @@ import (
 )
 
 func AdminRoutersInit(r *gin.Engine) {
-	// 配置分组中间件
-	//adminRouters:=r.Group("/admin",middleware.InitMiddleware)
+
 	adminRouters := r.Group("/admin")
 	{
 		// admin.UserIndex() 表示执行方法，admin.UserIndex 表示注册方法
 		adminRouters.GET("/", admin.IndexController{}.Index)
 
 		adminRouters.GET("/user", admin.UserController{}.Index)
-		adminRouters.GET("/user/add", admin.UserController{}.Add)
-		adminRouters.GET("/user/update", admin.UserController{}.Update)
-		adminRouters.GET("/user/delete", admin.UserController{}.Delete)
+		adminRouters.POST("/user/add", admin.UserController{}.Add)
+		adminRouters.PUT("/user/update", admin.UserController{}.Update)
+		adminRouters.DELETE("/user/delete", admin.UserController{}.Delete)
 
 		adminRouters.GET("/user1", admin.User1Controller{}.Index)
-		adminRouters.GET("/user1/add", admin.User1Controller{}.Add)
-		adminRouters.GET("/user1/update", admin.User1Controller{}.Update)
-		adminRouters.GET("/user1/delete", admin.User1Controller{}.Delete)
+		adminRouters.POST("/user1/add", admin.User1Controller{}.Add)
+		adminRouters.PUT("/user1/update", admin.User1Controller{}.Update)
+		adminRouters.DELETE("/user1/delete", admin.User1Controller{}.Delete)
+		// :id 相当于一个变量，函数中用c.param()接收解析
+		//adminRouters.DELETE("/user1/delete/:id", admin.User1Controller{}.Delete)
 
 		adminRouters.GET("/article", admin.ArticleController{}.Index)
 		adminRouters.GET("/article/add", admin.ArticleController{}.Add)

@@ -9,7 +9,6 @@ import (
 func InitMiddleware(c *gin.Context) {
 	// 分组中间件在路由模板配置
 	fmt.Println(time.Now())
-	fmt.Println(c.Request.URL)
 	// 设置键值，在其他模块使用c.Get获取，这次使用在admin indexController中
 	c.Set("username", "zhangsan")
 

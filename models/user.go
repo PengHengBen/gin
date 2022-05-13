@@ -6,7 +6,7 @@ type User struct {
 	Id             int
 	Name           string
 	Gender         string
-	Age            byte
+	Age            int
 	SubmissionDate time.Time
 }
 

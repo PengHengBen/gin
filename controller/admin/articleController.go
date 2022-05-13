@@ -5,13 +5,10 @@ import (
 	"net/http"
 )
 
-type ArticleController struct {
-	BaseController
-}
+type ArticleController struct{}
 
 func (con ArticleController) Index(c *gin.Context) {
-	//c.String(http.StatusOK,"admin article list controller struct")
-	con.success(c)
+	c.String(http.StatusOK, "admin article list controller struct")
 }
 func (con ArticleController) Add(c *gin.Context) {
 	c.String(http.StatusOK, "admin add article controller struct")
